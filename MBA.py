@@ -29,7 +29,7 @@ def get_number_of_pages_in_database(url):
     return int(page_list[-2].text_content())
 
 def collect_words(url):
-    audios = []
+    words = []
     response = requests.get(url, cookies = cookies)
     response.raise_for_status()
     tree = html.fromstring(response.text)
@@ -39,15 +39,15 @@ def collect_words(url):
         try:
             lang_word = div.xpath("td[2]/div/div/text()")[0]
         except IndexError:
-            print("failed to get the word of item with id " + str(thing_id) + ' on ' + str(database_page_url))
+            print("Failed to get the word of item with id " + str(thing_id) + ' on ' + str(database_page_url))
             continue
         column_number_of_audio = div.xpath("td[contains(@class, 'audio')]/@data-key")[0]
         audio_files = div.xpath("td[contains(@class, 'audio')]/div/div[contains(@class, 'dropdown-menu')]/div")
         number_of_audio_files = len(audio_files)
-        audios.append({'thing_id': thing_id, 'number_of_audio_files': number_of_audio_files, 'lang_word': lang_word, 'column_number_of_audio': column_number_of_audio})
-    return audios
+        words.append({'thing_id': thing_id, 'number_of_audio_files': number_of_audio_files, 'lang_word': lang_word, 'column_number_of_audio': column_number_of_audio})
+    return words
 
-def upload_audios(url, audios):
+def upload_audios_for_words(url, audios):
     for audio in audios:
         if audio['number_of_audio_files'] > 0:
             continue
@@ -57,8 +57,6 @@ def upload_audios(url, audios):
         tts.save(temp_file.name)
         upload_file_to_server(audio['thing_id'], audio['column_number_of_audio'], url, temp_file)
         print(audio['lang_word'] + ' succeeded')
-
-
 
 if __name__ == "__main__":
 
@@ -79,4 +77,4 @@ if __name__ == "__main__":
     for page_number in range(1, number_of_pages + 1):
         database_page_url = url + '?page=' + str(page_number)
         audios = collect_words(database_page_url)
-        upload_audios(database_page_url, audios)
+        upload_audios_for_words(database_page_url, audios)
