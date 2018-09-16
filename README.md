@@ -13,7 +13,14 @@ Script analyzes given course database and for all words that don't contain any a
 * tempfile
 
 To satisfy dependencies you need to install required packages. It is possible using pip.
-For example: *pip install gtts* or *pip install lxml*
+For example: 
+```
+pip install gtts
+```
+or 
+```
+pip install lxml
+```
 For more information about python packages, go to: https://packaging.python.org/tutorials/installing-packages/
 
 # How to use
