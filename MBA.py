@@ -2,8 +2,17 @@ import argparse
 import gtts
 import requests
 from lxml import html
-from variables import cookies
 import tempfile
+import json
+
+cookies = {}
+
+def parse_cookies():
+	f = open("cookies.txt", "r")
+	cookies_json = f.read()
+	cookies_json = json.loads(cookies_json)
+	for x in cookies_json:
+		cookies[x['name']] = x['value']
 
 def upload_file_to_server(thing_id, cell_id, course, file):
     files = {'f': ('whatever.mp3', open(file.name, 'rb'), 'audio/mp3')}
@@ -15,7 +24,7 @@ def upload_file_to_server(thing_id, cell_id, course, file):
     headers = {
         "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:35.0) Gecko/20100101 Firefox/35.0",
         "referer": course}
-    post_url = "https://www.memrise.com/ajax/thing/cell/upload_file/"
+    post_url = "https://decks.memrise.com/ajax/thing/cell/upload_file/"
     response = requests.post(post_url, files=files, cookies=cookies, headers=headers, data=form_data, timeout=60)
     response.raise_for_status()
 
@@ -59,7 +68,7 @@ def upload_audios_for_words(url, audios):
         print(audio['lang_word'] + ' succeeded')
 
 if __name__ == "__main__":
-
+    parse_cookies()
     languages = gtts.lang.tts_langs()
     parser = argparse.ArgumentParser(description='This script uploads all missing audio files to the Memrise course')
     parser.add_argument('--language', choices=[*languages], metavar='lang-code', required=True, help='Specifies language for which audio will be downloaded.  Supported languages: ' + ', '.join([*languages]))
