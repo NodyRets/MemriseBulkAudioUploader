@@ -70,7 +70,6 @@ def upload_audios_for_words(url, audios):
         print(audio['lang_word'] + ' succeeded')
 
 if __name__ == "__main__":
-    parse_cookies()
     languages = gtts.lang.tts_langs()
     parser = argparse.ArgumentParser(description='This script uploads all missing audio files to the Memrise course')
     parser.add_argument('--language', choices=[*languages], metavar='lang-code', required=True, help='Specifies language for which audio will be downloaded.  Supported languages: ' + ', '.join([*languages]))
@@ -83,6 +82,7 @@ if __name__ == "__main__":
     if not language in languages:
         raise ValueError("Entered language: " + language + " is not supported!")
     
+    parse_cookies()
     number_of_pages = get_number_of_pages_in_database(url)
 
     for page_number in range(1, number_of_pages + 1):
