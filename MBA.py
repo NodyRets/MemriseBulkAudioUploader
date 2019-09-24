@@ -35,6 +35,8 @@ def get_number_of_pages_in_database(url):
     page_list = html_doc.xpath("//div[contains(@class, 'pagination')]/ul/li")
     if not page_list:
         raise ValueError("Number of pages cannot be found. Please check course url and cookies!")
+    if len(page_list) == 1:
+        return 1
     return int(page_list[-2].text_content())
 
 def collect_words(url):
