@@ -1,4 +1,4 @@
-#DEPRECATED
+# DEPRECATED
 
 # MemriseBulkAudioUploader
 Python script that lets user to upload all missing audio files to the Memrise course.
